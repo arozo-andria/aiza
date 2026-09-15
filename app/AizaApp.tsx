@@ -2,10 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-// Type-only: matching itself now runs server-side in app/api/match/route.ts
-// (it queries the SQLite KB via node:sqlite, which can't run in the
-// browser) - import the value from "@/lib/matchIntent" here and Next would
-// try to bundle node:sqlite for the client and fail the build.
 import type { KnowledgeEntry, ProcedureEntry } from "@/lib/knowledgeBase";
 
 type Source = "voice" | "text";
@@ -18,7 +14,15 @@ type AppState =
   | { screen: "result"; transcript: string; source: Source; entry: KnowledgeEntry | null }
   | { screen: "voice_error"; message: string };
 
-const EXAMPLE_PROMPT = "Very ny CIN-ko, aiza no manao déclaration de perte?";
+const EXAMPLE_PROMPTS = [
+  { label: "CIN very", prompt: "Very ny CIN-ko, aiza no manao déclaration de perte?" },
+  { label: "Kopia nahaterahana", prompt: "Mila certificat de naissance aho ho an'ny zanako" },
+  { label: "Pasipaoro", prompt: "Ohatrinona ny frais pour ny passeport vaovao?" },
+  { label: "Permis very", prompt: "Very ny permis de conduire-ko, inona no atao?" },
+  { label: "Casier judiciaire", prompt: "Mila extrait de casier judiciaire aho eny amin'ny fitsarana" },
+  { label: "Titre foncier", prompt: "Manao ahoana ny procédure ho an'ny titre foncier?" },
+];
+
 const MAX_RECORDING_MS = 20_000;
 const UNDERSTANDING_DELAY_MS = { voice: 1100, text: 1300 } as const;
 
@@ -39,6 +43,7 @@ function pickMimeType(): string | undefined {
 export function AizaApp() {
   const [state, setState] = useState<AppState>({ screen: "home" });
   const [textValue, setTextValue] = useState("");
+  const [showLegalModal, setShowLegalModal] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -167,16 +172,16 @@ export function AizaApp() {
           <Brand />
           <div className="prompt">
             <p className="prompt__mg">Inona no ilainao?</p>
-            <p className="prompt__fr">What do you need?</p>
+            <p className="prompt__fr">De quelle démarche administrative avez-vous besoin ?</p>
           </div>
 
           <button className="mic-button" onClick={startRecording} aria-label="Start voice recording">
             <MicIcon />
           </button>
-          <p className="mic-hint">Tap to speak</p>
+          <p className="mic-hint">Tsindrio mba hiteny / Appuyez pour parler</p>
 
           <div className="divider">
-            <span>or</span>
+            <span>na / ou</span>
           </div>
 
           <form className="text-fallback" onSubmit={handleTextSubmit}>
@@ -184,32 +189,70 @@ export function AizaApp() {
               type="text"
               value={textValue}
               onChange={(event) => setTextValue(event.target.value)}
-              placeholder={EXAMPLE_PROMPT}
+              placeholder="Very ny CIN, pasipaoro, kopia..."
               aria-label="Type your question instead"
             />
             <button type="submit" disabled={!textValue.trim()}>
-              Send
+              Handefa
             </button>
           </form>
-          <p className="example-hint">Type instead — useful if voice isn&rsquo;t working.</p>
-          <Link
-            href="/record"
-            style={{
-              marginTop: "16px",
-              fontSize: "13px",
-              color: "var(--color-ink-soft)",
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
-              borderRadius: "var(--radius-full)",
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-            }}
-          >
-            <span>🎙️</span> Studio d&rsquo;enregistrement Benchmark
-          </Link>
+
+          {/* Quick suggestions pills */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "center", marginTop: "4px" }}>
+            {EXAMPLE_PROMPTS.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => proceedToUnderstanding(item.prompt, "text")}
+                style={{
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-full)",
+                  padding: "4px 10px",
+                  fontSize: "12px",
+                  color: "var(--color-ink-soft)",
+                  cursor: "pointer",
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ marginTop: "16px", display: "flex", gap: "12px", alignItems: "center" }}>
+            <Link
+              href="/record"
+              style={{
+                fontSize: "12px",
+                color: "var(--color-ink-soft)",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                padding: "4px 10px",
+                borderRadius: "var(--radius-full)",
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+              }}
+            >
+              🎙️ Studio Benchmark
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setShowLegalModal(true)}
+              style={{
+                fontSize: "12px",
+                color: "var(--color-ink-soft)",
+                background: "transparent",
+                border: "none",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              Mentions Légales & Origine
+            </button>
+          </div>
         </main>
       )}
 
@@ -262,12 +305,29 @@ export function AizaApp() {
           {state.entry ? (
             <MatchedCard entry={state.entry} />
           ) : (
-            <NotMatchedCard onTryExample={() => proceedToUnderstanding(EXAMPLE_PROMPT, "text")} />
+            <NotMatchedCard onTryExample={() => proceedToUnderstanding(EXAMPLE_PROMPTS[0].prompt, "text")} />
           )}
 
-          <button className="secondary-button secondary-button--ghost" onClick={reset}>
-            Ask another question
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%", marginTop: "12px" }}>
+            <button className="secondary-button secondary-button--ghost" onClick={reset}>
+              Hanao fanontaniana hafa / Poser une autre question
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowLegalModal(true)}
+              style={{
+                fontSize: "12px",
+                color: "var(--color-ink-soft)",
+                background: "transparent",
+                border: "none",
+                textDecoration: "underline",
+                cursor: "pointer",
+                textAlign: "center",
+              }}
+            >
+              Mentions Légales & Origine du projet
+            </button>
+          </div>
         </main>
       )}
 
@@ -276,9 +336,117 @@ export function AizaApp() {
           <Brand />
           <p className="error-message">{state.message}</p>
           <button className="primary-button" onClick={reset}>
-            Back
+            Hiverina / Retour
           </button>
         </main>
+      )}
+
+      {/* Legal & Origin Modal */}
+      {showLegalModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0, 0, 0, 0.55)",
+            backdropFilter: "blur(4px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+          }}
+          onClick={() => setShowLegalModal(false)}
+        >
+          <div
+            style={{
+              background: "var(--color-surface)",
+              borderRadius: "var(--radius-lg)",
+              maxWidth: "520px",
+              width: "100%",
+              maxHeight: "85vh",
+              overflowY: "auto",
+              padding: "24px 22px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+              textAlign: "left",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", borderBottom: "1px solid var(--color-border)", paddingBottom: "10px" }}>
+              <h2 style={{ fontSize: "18px", fontWeight: 800, margin: 0, color: "var(--color-primary)" }}>
+                Mentions Légales & Origine
+              </h2>
+              <button
+                onClick={() => setShowLegalModal(false)}
+                style={{ background: "transparent", border: "none", fontSize: "20px", cursor: "pointer", color: "var(--color-ink-soft)" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ fontSize: "13px", lineHeight: 1.55, color: "var(--color-ink)", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <section>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 4px", color: "var(--color-ink)" }}>
+                  Identité & Concepteur
+                </h3>
+                <p style={{ margin: 0 }}>
+                  <strong>AIZA</strong> est conçu et développé par <strong>Arozo Andriamaharo</strong>, résidant à Antananarivo, Madagascar (Contact : <code style={{ fontSize: "12px" }}>arozo.andria@gmail.com</code>).
+                </p>
+              </section>
+
+              <section>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 4px", color: "var(--color-ink)" }}>
+                  Contexte d&rsquo;origine
+                </h3>
+                <p style={{ margin: 0 }}>
+                  Ce projet a été initialement créé dans le cadre du <strong>Sahara CodeSwitch Africa Challenge</strong> (organisé par <strong>Intron Health</strong>). Il a pour vocation de combler le fossé linguistique à Madagascar, où plus de 30 millions de citoyens s&rsquo;expriment naturellement en mélangeant le malgache et le français (code-switching) lors de leurs démarches administratives.
+                </p>
+              </section>
+
+              <section>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 4px", color: "var(--color-ink)" }}>
+                  Sources & Vérifiabilité des procédures
+                </h3>
+                <p style={{ margin: 0 }}>
+                  Toutes les démarches (CIN, acte de naissance, mariage, permis, passeport, casier judiciaire, titre foncier) sont extraites des réglementations publiques et portails officiels (Ministère de l&rsquo;Intérieur, Commune Urbaine d&rsquo;Antananarivo, Tribunal d&rsquo;Anosy, Service des Domaines). L&rsquo;application ne génère jamais de fausses procédures et s&rsquo;abstient explicitement en cas d&rsquo;absence d&rsquo;information vérifiée.
+                </p>
+              </section>
+
+              <section>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 4px", color: "var(--color-ink)" }}>
+                  Protection des données & Vie privée
+                </h3>
+                <p style={{ margin: 0 }}>
+                  AIZA ne stocke, n&rsquo;enregistre et ne revend aucun enregistrement vocal personnel. Le flux audio est transmis de manière chiffrée et éphémère pour transcription puis immédiatement détruit.
+                </p>
+              </section>
+
+              <section>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 4px", color: "var(--color-ink)" }}>
+                  Projet Open Source
+                </h3>
+                <p style={{ margin: 0 }}>
+                  Le code source complet, la documentation et le benchmark sont publics sous licence open-source :<br />
+                  <a
+                    href="https://github.com/arozo-andria/aiza"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: "var(--color-primary)", fontWeight: 600, wordBreak: "break-all" }}
+                  >
+                    https://github.com/arozo-andria/aiza
+                  </a>
+                </p>
+              </section>
+            </div>
+
+            <button
+              onClick={() => setShowLegalModal(false)}
+              className="primary-button"
+              style={{ marginTop: "18px", padding: "12px", fontSize: "14px" }}
+            >
+              Mazava / Compris
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -392,7 +560,7 @@ function NotMatchedCard({ onTryExample }: { onTryExample: () => void }) {
       <p className="unmatched-suggestion">Here&rsquo;s what I do have verified:</p>
 
       <button className="secondary-button" onClick={onTryExample}>
-        Try: &ldquo;{EXAMPLE_PROMPT}&rdquo;
+        Try: &ldquo;{EXAMPLE_PROMPTS[0].prompt}&rdquo;
       </button>
     </div>
   );

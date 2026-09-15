@@ -22,11 +22,21 @@ export function matchIntent(transcript: string): KnowledgeEntry | null {
   if (!normalized) return null;
 
   const entries = listEntries();
-  return (
-    entries.find((entry) =>
-      entry.keywords.some((keyword) => normalized.includes(normalize(keyword)))
-    ) ?? null
-  );
+  let bestMatch: { entry: KnowledgeEntry; score: number } | null = null;
+
+  for (const entry of entries) {
+    for (const keyword of entry.keywords) {
+      const normKw = normalize(keyword);
+      if (normKw && normalized.includes(normKw)) {
+        const score = normKw.length;
+        if (!bestMatch || score > bestMatch.score) {
+          bestMatch = { entry, score };
+        }
+      }
+    }
+  }
+
+  return bestMatch?.entry ?? null;
 }
 
 export type { KnowledgeEntry, ProcedureEntry, AdviceEntry } from "./knowledgeBase";
