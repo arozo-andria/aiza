@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AIZA — CodeSwitch Africa Benchmark Report</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    line-height: 1.35;
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    font-size: 17px;
+    color: #c2410c;
+    margin: 0 0 2px 0;
+    font-weight: 800;
+  }
+  .subtitle {
+    font-size: 10px;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  h2 {
+    font-size: 11.5px;
+    color: #9a3412;
+    border-bottom: 1.5px solid #fed7aa;
+    padding-bottom: 2px;
+    margin: 8px 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  p {
+    margin: 0 0 5px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0;
+    font-size: 9px;
+  }
+  th, td {
+    border: 1px solid #e5e7eb;
+    padding: 3.5px 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background-color: #fff7ed;
+    color: #9a3412;
+    font-weight: 700;
+  }
+  tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+  .badge {
+    display: inline-block;
+    padding: 1.5px 5px;
+    border-radius: 3px;
+    font-size: 8.5px;
+    font-weight: 700;
+  }
+  .badge-sahara { background: #ffedd5; color: #c2410c; }
+  .badge-hf { background: #e0f2fe; color: #0369a1; }
+  .card {
+    background: #fafaf9;
+    border: 1px solid #f5f5f4;
+    border-radius: 5px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+  }
+  .page-break {
+    page-break-after: always;
+  }
+  .grid-2 {
+    display: flex;
+    gap: 8px;
+  }
+  .grid-2 > div {
+    flex: 1;
+  }
+  .code {
+    font-family: ui-monospace, monospace;
+    font-size: 8.5px;
+    background: #f3f4f6;
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+  .ref { font-weight: 600; color: #111; }
+  .hyp { color: #333; }
+  .footer {
+    font-size: 8px;
+    color: #888;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 4px;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: Executive Summary, Models, Methodology & Quantitative Results -->
+<h1>AIZA — Malagasy/French Code-Switching Speech Benchmark</h1>
+<div class="subtitle">
+  <strong>Sahara CodeSwitch Africa Challenge</strong> · Author: Arozo Andriamaharo (AIZA Project) · September 2026<br>
+  GitHub: <span class="code">https://github.com/arozo-andria/aiza</span> · Web: <span class="code">aiza.vercel.app</span>
+</div>
+
+<h2>1. Executive Summary & Evaluated Models</h2>
+<p>
+Malagasy administrative interactions are characterized by pervasive intra-sentential code-switching: citizens embed French bureaucratic terms into Malagasy syntax (e.g. <em>"Very ny CIN-ko, aiza no manao déclaration de perte?"</em>). This benchmark evaluates <strong>Intron Sahara</strong> alongside two open-source Malagasy fine-tunes on self-recorded authentic citizen queries in Antananarivo, Madagascar.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 22%;">Model</th>
+      <th style="width: 28%;">Architecture & Source</th>
+      <th style="width: 25%;">Key Strengths</th>
+      <th style="width: 25%;">Key Limitations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Intron Sahara</strong><br><span class="badge badge-sahara">Shipped in AIZA</span></td>
+      <td>Cloud API (<span class="code">infer.voice.intron.io</span>)<br>ASR mode: French (<span class="code">fr</span>)</td>
+      <td>Fastest latency (<strong>3.2s avg</strong>); preserves French legal anchor keywords (<em>"déclaration de perte"</em>).</td>
+      <td>Malagasy unlisted in catalogue; treats Malagasy syntax as French phonetic homophones.</td>
+    </tr>
+    <tr>
+      <td><strong>Whisper-Small Malagasy</strong><br><span class="badge badge-hf">misterkissi/whisper-small-malagasy</span></td>
+      <td>OpenAI Whisper-Small fine-tuned on Malagasy Common Voice (HF)</td>
+      <td>Accurate recognition of pure Malagasy grammar. Runs fully offline on CPU.</td>
+      <td>High latency (<strong>6.5s avg</strong>); severely distorts French loanwords into Malagasy phonetics.</td>
+    </tr>
+    <tr>
+      <td><strong>WAXAL Whisper Malagasy</strong><br><span class="badge badge-hf">waxal-benchmarking/whisper-small-waxal-mlg</span></td>
+      <td>Whisper-Small fine-tuned under African WAXAL Initiative (HF)</td>
+      <td>Best aggregate WER (<strong>76.4%</strong>); robust acoustic modeling for African accents. Offline.</td>
+      <td>Fails on code-switching transitions; requires custom tokenizer fallback.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="font-size: 8.5px; color: #666; margin: 2px 0 6px;">
+<em>Ecosystem notes:</em> <strong>Rakitsoratra</strong> (rakitsoratra.professionnel.mg) is Madagascar's commercial STT web app (MVola monetization) but closed-source. <strong>Artifisialy / ABIDI v1</strong> is a Malagasy Text-to-Speech (TTS) engine, not an ASR tool.
+</p>
+
+<h2>2. Dataset & Methodology</h2>
+<ul style="margin: 2px 0 4px; padding-left: 14px;">
+  <li><strong>Corpus:</strong> 10 authentic administrative queries recorded via AIZA Studio (<span class="code">/record</span>) covering lost IDs, birth certificates, marriage certificates, driver's licenses, address changes, passport fees, land titles, criminal records, and processing delays.</li>
+  <li><strong>Linguistic Structure:</strong> 100% intra-sentential Malagasy/French code-switching.</li>
+  <li><strong>Audio Specifications:</strong> 10 WebM/Opus recordings (<span class="code">01</span> to <span class="code">10</span>), 16kHz, total 62 seconds, 6.2s average length.</li>
+  <li><strong>Ground Truth:</strong> Human-verified orthography normalized for Malagasy diacritics and French administrative terminology.</li>
+</ul>
+
+<h2>3. Quantitative Results (Lower WER/CER is better)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>N</th>
+      <th>Avg WER ↓</th>
+      <th>Avg CER ↓</th>
+      <th>Avg Latency ↓</th>
+      <th>Downstream Procedure Match Rate ↑</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Intron Sahara</strong></td>
+      <td>10</td>
+      <td><strong>82.6%</strong></td>
+      <td><strong>45.9%</strong></td>
+      <td><strong>3.2s</strong></td>
+      <td><strong>60% (6 / 10 queries matched to verified procedures)</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Whisper-Small Malagasy</strong></td>
+      <td>10</td>
+      <td>88.2%</td>
+      <td>48.1%</td>
+      <td>6.5s</td>
+      <td>20% (2 / 10 queries matched)</td>
+    </tr>
+    <tr>
+      <td><strong>WAXAL Whisper Malagasy</strong></td>
+      <td>10</td>
+      <td><strong>76.4%</strong></td>
+      <td><strong>46.5%</strong></td>
+      <td>6.8s</td>
+      <td>20% (2 / 10 queries matched)</td>
+    </tr>
+  </tbody>
+</table>
+<p style="font-size: 8.5px; color: #555;">
+<em>Downstream task note:</em> Evaluates whether the transcript successfully triggers the correct verified administrative procedure card in AIZA's SQLite database (<span class="code">lost_cin</span>, <span class="code">birth_certificate</span>, etc.).
+</p>
+
+<div class="page-break"></div>
+
+<!-- PAGE 2: Utterance-by-Utterance Breakdown -->
+<h2>4. Utterance-by-Utterance Breakdown (All 10 Queries)</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 3%;">#</th>
+      <th style="width: 27%;">Ground Truth (Reference)</th>
+      <th style="width: 25%;">Intron Sahara (fr)</th>
+      <th style="width: 23%;">WAXAL Whisper Malagasy</th>
+      <th style="width: 22%;">Whisper Malagasy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>01</td>
+      <td><span class="ref">Very ny CIN-ko, aiza no manao déclaration de perte?</span></td>
+      <td><span class="hyp">'Ferens Yenne même aux déclarations de perte'</span><br><small>WER: 80% · CER: 43%</small></td>
+      <td><span class="hyp">'veriny se hianinaako aiza no manao dia kilao rasion deoparita'</span><br><small>WER: 80% · CER: 45%</small></td>
+      <td><span class="hyp">'verin'ny sehy ianinako, aiza ny manoha dia kilarasyon-deo mperita?'</span><br><small>WER: 100% · CER: 53%</small></td>
+    </tr>
+    <tr>
+      <td>02</td>
+      <td><span class="ref">Mila certificat de naissance aho ho an'ny zanako.</span></td>
+      <td><span class="hyp">'La certificat de naissance Wançen à coût'</span><br><small>WER: 63% · CER: 38%</small></td>
+      <td><span class="hyp">'lasary tia fikadonisao ho anny zanako'</span><br><small>WER: 75% · CER: 48%</small></td>
+      <td><span class="hyp">'na sertifika tena ison-sa ho an'ny zanako.'</span><br><small>WER: 63% · CER: 33%</small></td>
+    </tr>
+    <tr>
+      <td>03</td>
+      <td><span class="ref">Aiza no maka acte de mariage eto Antananarivo?</span></td>
+      <td><span class="hyp">'Est-ce ma caracte de mariage étant en arrive'</span><br><small>WER: 88% · CER: 38%</small></td>
+      <td><span class="hyp">'aisaka kay no maka haka tato mariazy eto antananarivo'</span><br><small>WER: 63% · CER: 38%</small></td>
+      <td><span class="hyp">'haisakaainy makahakita teo maharihazy eto an-tananarivo?'</span><br><small>WER: 100% · CER: 42%</small></td>
+    </tr>
+    <tr>
+      <td>04</td>
+      <td><span class="ref">Very ny permis de conduire-ko, inona no atao?</span></td>
+      <td><span class="hyp">'Permet de conduire Jacques, inamo.'</span><br><small>WER: 78% · CER: 54%</small></td>
+      <td><span class="hyp">'tery mety ho gondohirako inona no atao'</span><br><small>WER: 67% · CER: 37%</small></td>
+      <td><span class="hyp">'Behery mety ho kanjo irako. Inano atao?'</span><br><small>WER: 89% · CER: 51%</small></td>
+    </tr>
+    <tr>
+      <td>05</td>
+      <td><span class="ref">Mila changement d'adresse aho, any amin'ny fokontany ve?</span></td>
+      <td><span class="hyp">'Le changement d’adresse unième fautin fait'</span><br><small>WER: 88% · CER: 50%</small></td>
+      <td><span class="hyp">'lasandromandady iray sanga any aminny fokotany ve'</span><br><small>WER: 75% · CER: 44%</small></td>
+      <td><span class="hyp">'oanjy monta adiraisa aho anemy fokitany ve'</span><br><small>WER: 75% · CER: 50%</small></td>
+    </tr>
+    <tr>
+      <td>06</td>
+      <td><span class="ref">Ohatrinona ny frais pour ny passeport vaovao?</span></td>
+      <td><span class="hyp">"Au chien n'en ferait pour pas sport fort?"</span><br><small>WER: 100% · CER: 50%</small></td>
+      <td><span class="hyp">'ohatrany ny freimpasimbaovao vaovao'</span><br><small>WER: 71% · CER: 48%</small></td>
+      <td><span class="hyp">'ho tsy ny fray pora-pasiparva vao?'</span><br><small>WER: 100% · CER: 48%</small></td>
+    </tr>
+    <tr>
+      <td>07</td>
+      <td><span class="ref">Tsy mety ny carte d'identité-ko, tapitra ny validité.</span></td>
+      <td><span class="hyp">'Si méthan cachent d’identité accout obchant validité.'</span><br><small>WER: 89% · CER: 41%</small></td>
+      <td><span class="hyp">'tsy mety ny karita dido antitehako tapitra ny validite'</span><br><small>WER: 33% · CER: 18%</small></td>
+      <td><span class="hyp">'tsy mety ny karita didon-titehako tapitra ny validy ite.'</span><br><small>WER: 56% · CER: 20%</small></td>
+    </tr>
+    <tr>
+      <td>08</td>
+      <td><span class="ref">Manao ahoana ny procédure ho an'ny titre foncier?</span></td>
+      <td><span class="hyp">'La procédure un titre français?'</span><br><small>WER: 75% · CER: 54%</small></td>
+      <td><span class="hyp">'posedure ho anny hita frantsay fotsy iaka e'</span><br><small>WER: 100% · CER: 77%</small></td>
+      <td><span class="hyp">'mprosesy hirao anehititra firan-fonsiegle,'</span><br><small>WER: 100% · CER: 75%</small></td>
+    </tr>
+    <tr>
+      <td>09</td>
+      <td><span class="ref">Mila extrait de casier judiciaire aho, aiza no mankany?</span></td>
+      <td><span class="hyp">'Mais il a extrait de gaz judiciaires Wacen Mcane?'</span><br><small>WER: 100% · CER: 45%</small></td>
+      <td><span class="hyp">'milaiky sy reto ka azy avy ity sery aho aiza kay no mankany'</span><br><small>WER: 100% · CER: 57%</small></td>
+      <td><span class="hyp">'milaheksitireto eo gazehajodisy herao aizakaian'ny makane?'</span><br><small>WER: 100% · CER: 60%</small></td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><span class="ref">Firy andro no ilaina hahazoana ny déclaration de perte?</span></td>
+      <td><span class="hyp">'C’est rianoz à une déclaration de perte.'</span><br><small>WER: 67% · CER: 46%</small></td>
+      <td><span class="hyp">'fy rihandro no azo ahoana dia kilao soa teo mpiata'</span><br><small>WER: 100% · CER: 54%</small></td>
+      <td><span class="hyp">'firiandry noho aza hoana diaekilarasy ao teo perta?'</span><br><small>WER: 100% · CER: 48%</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- PAGE 3: Qualitative Insights, Architecture, Ethics & Reproducibility -->
+<h2>5. Qualitative Findings: The Code-Switching Asymmetry Paradox</h2>
+<div class="card">
+  <strong>Key Discovery: Entity Preservation Beats Carrier Syntax in Downstream Tasks</strong><br>
+  While WAXAL Whisper achieved the lowest acoustic WER (76.4%), <strong>Sahara achieved 3× higher downstream task matching (60% vs 20%)</strong>. In administrative services, procedural intent is anchored in French terminology (<em>"déclaration de perte"</em>, <em>"certificat de naissance"</em>). Because Sahara recognized French phrases accurately, AIZA was able to reliably match procedures even when the Malagasy prefix was distorted into French homophones. In contrast, monolingual Malagasy models phonetically broke French words (e.g. <em>"déclaration de perte"</em> → <em>"kilarasyon-deo mperita"</em>), completely missing the keywords.
+</div>
+
+<div class="card">
+  <strong>Linguistic Failure Modes Observed:</strong>
+  <ul style="margin: 2px 0; padding-left: 14px;">
+    <li><strong>Sahara (French mode):</strong> Map Malagasy syntax into French homophones (<em>"Very ny CIN-ko"</em> → <em>"Ferens Yenne même aux"</em>). Highly robust on French administrative compound nouns.</li>
+    <li><strong>Whisper Malagasy fine-tunes:</strong> Accurately capture Malagasy grammatical particles (<em>"tsy mety ny"</em>, <em>"ho an'ny zanako"</em>), but lack vocabulary for French loanwords, creating phonetic hallucinations.</li>
+  </ul>
+</div>
+
+<h2>6. Key Architecture Decisions & Ethics Note</h2>
+<div class="grid-2">
+  <div class="card">
+    <strong>Technical & Architectural Choices</strong>
+    <ul style="margin: 2px 0; padding-left: 12px;">
+      <li><strong>Sahara as Primary Engine:</strong> Selected for lowest latency (3.2s) and high legal keyword retention in live PWA.</li>
+      <li><strong>Mandatory Text Fallback:</strong> Given the 82.6% WER on Malagasy, text typing is a first-class citizen in AIZA's UI.</li>
+      <li><strong>Deterministic Knowledge Grounding:</strong> Extracted intents query an immutable SQLite database (<span class="code">data/aiza.db</span>). AIZA strictly abstains (<em>"No verified procedure found"</em>) rather than fabricating legal advice.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <strong>Ethics, Safety & Inclusion</strong>
+    <ul style="margin: 2px 0; padding-left: 12px;">
+      <li><strong>Informed Consent & Privacy:</strong> All audio clips were self-recorded with informed consent. Zero audio is stored or retained on disk by the deployed PWA.</li>
+      <li><strong>Addressing Linguistic Inequity:</strong> Malagasy (30M speakers) is absent from AfriSwitch and major speech benchmarks. Surfacing this real-world gap is an intentional contribution of this project.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>7. Reproducibility & Open Source</h2>
+<p>
+The benchmark script, raw results, model configurations, and self-recorded audio clips are fully published and reproducible:
+</p>
+<div style="background: #1e293b; color: #f8fafc; padding: 6px 10px; border-radius: 4px; font-family: monospace; font-size: 8.5px; margin-bottom: 4px;">
+  git clone https://github.com/arozo-andria/aiza.git && cd aiza<br>
+  ./benchmark/venv/bin/python3 benchmark/run_benchmark.py
+</div>
+<p style="font-size: 8.5px; color: #555;">
+Outputs: <span class="code">benchmark/results.json</span> (raw metrics), <span class="code">benchmark/REPORT.md</span> (full markdown report), <span class="code">benchmark/audio/</span> (10 test clips).
+</p>
+
+<div class="footer">
+  AIZA — Sahara CodeSwitch Africa Main Challenge Submission · Confidential for Competition Evaluation · 3-Page Official Report
+</div>
+
+</body>
+</html>
