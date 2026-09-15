@@ -389,7 +389,7 @@ export function AizaApp() {
                   Identité & Concepteur
                 </h3>
                 <p style={{ margin: 0 }}>
-                  <strong>AIZA</strong> est conçu et développé par <strong>Arozo Andriamaharo</strong>, résidant à Antananarivo, Madagascar (Contact : <code style={{ fontSize: "12px" }}>arozo.andria@gmail.com</code>).
+                  <strong>AIZA</strong> est conçu et développé par <strong>Arozo ANDRIAMISANDRATSOA</strong>, résidant à Antananarivo, Madagascar (Contact : <code style={{ fontSize: "12px" }}>arozo.andria@gmail.com</code>).
                 </p>
               </section>
 
@@ -404,10 +404,10 @@ export function AizaApp() {
 
               <section>
                 <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 4px", color: "var(--color-ink)" }}>
-                  Sources & Vérifiabilité des procédures
+                  Authenticité, Sources officielles & Date de mise à jour
                 </h3>
                 <p style={{ margin: 0 }}>
-                  Toutes les démarches (CIN, acte de naissance, mariage, permis, passeport, casier judiciaire, titre foncier) sont extraites des réglementations publiques et portails officiels (Ministère de l&rsquo;Intérieur, Commune Urbaine d&rsquo;Antananarivo, Tribunal d&rsquo;Anosy, Service des Domaines). L&rsquo;application ne génère jamais de fausses procédures et s&rsquo;abstient explicitement en cas d&rsquo;absence d&rsquo;information vérifiée.
+                  Afin de garantir une <strong>authenticité et une traçabilité totales</strong>, chaque fiche administrative affichée par AIZA mentionne explicitement la <strong>source officielle d&rsquo;information</strong> (Ministère de l&rsquo;Intérieur, Commune Urbaine d&rsquo;Antananarivo, Tribunal de Première Instance d&rsquo;Anosy, Service des Domaines, etc.) ainsi que la <strong>date de dernière mise à jour / vérification</strong>. L&rsquo;application ne génère jamais de fausses procédures et s&rsquo;abstient explicitement en cas d&rsquo;absence d&rsquo;information vérifiée.
                 </p>
               </section>
 

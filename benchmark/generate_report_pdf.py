@@ -119,8 +119,8 @@ html_content = """<!DOCTYPE html>
 <!-- PAGE 1: Executive Summary, Models, Methodology & Quantitative Results -->
 <h1>AIZA — Malagasy/French Code-Switching Speech Benchmark</h1>
 <div class="subtitle">
-  <strong>Sahara CodeSwitch Africa Challenge</strong> · Author: Arozo Andriamaharo (AIZA Project) · September 2026<br>
-  GitHub: <span class="code">https://github.com/arozo-andria/aiza</span> · Web: <span class="code">aiza.vercel.app</span>
+  <strong>Sahara CodeSwitch Africa Challenge</strong> · Author: Arozo ANDRIAMISANDRATSOA (AIZA Project) · September 2026<br>
+  GitHub: <span class="code">https://github.com/arozo-andria/aiza</span> · Web: <span class="code">https://aiza-sahara-codeswitch.vercel.app</span>
 </div>
 
 <h2>1. Executive Summary & Evaluated Models</h2>
