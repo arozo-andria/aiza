@@ -19,6 +19,7 @@ export default function RecordPage() {
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [readOnly, setReadOnly] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -38,6 +39,7 @@ export default function RecordPage() {
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setSentences(data.sentences || []);
+      setReadOnly(Boolean(data.readOnly));
     } catch {
       setErrorMsg("Tsy afaka naka ny lisitry ny fehezanteny.");
     } finally {
@@ -173,8 +175,15 @@ export default function RecordPage() {
             Fandraisam-peo ho an&rsquo;ny Benchmark
           </h1>
           <p style={{ fontSize: "14px", color: "var(--color-ink-soft)", margin: 0, lineHeight: 1.5 }}>
-            Enregistrez les 10 phrases de test en malgache/français pour évaluer Sahara et les modèles comparatifs.
+            {readOnly
+              ? "Écoutez les 10 phrases de test en malgache/français utilisées pour évaluer Sahara et les modèles comparatifs."
+              : "Enregistrez les 10 phrases de test en malgache/français pour évaluer Sahara et les modèles comparatifs."}
           </p>
+          {readOnly && (
+            <p style={{ fontSize: "12.5px", color: "var(--color-ink-soft)", margin: "6px 0 0", fontStyle: "italic" }}>
+              Lecture seule en ligne — l&rsquo;enregistrement se fait en local (npm run dev).
+            </p>
+          )}
         </div>
 
         {errorMsg && (
@@ -254,7 +263,15 @@ export default function RecordPage() {
                     </div>
                   )}
 
-                  {/* Action row */}
+                  {/* Action row — hidden online: recording/deleting needs a writable
+                      filesystem, which Vercel's serverless functions don't have. */}
+                  {readOnly ? (
+                    !item.recorded && (
+                      <p style={{ fontSize: "13px", color: "var(--color-ink-soft)", margin: 0 }}>
+                        Tsy mbola voarakitra — non disponible en ligne.
+                      </p>
+                    )
+                  ) : (
                   <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }}>
                     {isRecordingThis ? (
                       <button
@@ -321,20 +338,23 @@ export default function RecordPage() {
                       </div>
                     )}
                   </div>
+                  )}
                 </div>
               );
             })}
           </div>
         )}
 
-        <footer style={{ width: "100%", textAlign: "center", padding: "20px 0", borderTop: "1px solid var(--color-border)", marginTop: "12px" }}>
-          <p style={{ fontSize: "13px", color: "var(--color-ink-soft)", margin: "0 0 10px" }}>
-            Rehefa voaray ny feo rehetra, mandehana ao amin&rsquo;ny terminal:
-          </p>
-          <code style={{ display: "block", background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "8px", padding: "10px", fontSize: "12.5px", color: "var(--color-primary-dark)", wordBreak: "break-all" }}>
-            ./benchmark/venv/bin/python3 run_benchmark.py
-          </code>
-        </footer>
+        {!readOnly && (
+          <footer style={{ width: "100%", textAlign: "center", padding: "20px 0", borderTop: "1px solid var(--color-border)", marginTop: "12px" }}>
+            <p style={{ fontSize: "13px", color: "var(--color-ink-soft)", margin: "0 0 10px" }}>
+              Rehefa voaray ny feo rehetra, mandehana ao amin&rsquo;ny terminal:
+            </p>
+            <code style={{ display: "block", background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "8px", padding: "10px", fontSize: "12.5px", color: "var(--color-primary-dark)", wordBreak: "break-all" }}>
+              ./benchmark/venv/bin/python3 run_benchmark.py
+            </code>
+          </footer>
+        )}
       </main>
     </div>
   );

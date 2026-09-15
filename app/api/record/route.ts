@@ -7,8 +7,14 @@ export const runtime = "nodejs";
 const AUDIO_DIR = path.join(process.cwd(), "benchmark", "audio");
 const GROUND_TRUTH_PATH = path.join(process.cwd(), "benchmark", "ground_truth.json");
 
+// Vercel's serverless filesystem is read-only outside /tmp - same constraint
+// as lib/db.ts. The recorded .webm files ship committed in the deployment
+// bundle (see .vercelignore), so production only ever needs to read them;
+// recording/re-recording/deleting stays a local-dev-only capability.
+const isDeployed = !!process.env.VERCEL;
+
 function ensureAudioDir() {
-  if (!fs.existsSync(AUDIO_DIR)) {
+  if (!isDeployed && !fs.existsSync(AUDIO_DIR)) {
     fs.mkdirSync(AUDIO_DIR, { recursive: true });
   }
 }
@@ -55,7 +61,7 @@ export async function GET(request: NextRequest) {
       groundTruth = JSON.parse(fs.readFileSync(GROUND_TRUTH_PATH, "utf-8"));
     }
 
-    const files = fs.readdirSync(AUDIO_DIR);
+    const files = fs.existsSync(AUDIO_DIR) ? fs.readdirSync(AUDIO_DIR) : [];
     const recordedMap: Record<string, string> = {};
 
     for (const file of files) {
@@ -76,6 +82,9 @@ export async function GET(request: NextRequest) {
       sentences,
       total: sentences.length,
       recordedCount: Object.keys(recordedMap).length,
+      // Tells the Studio UI whether to offer record/delete or just playback -
+      // see the isDeployed comment above.
+      readOnly: isDeployed,
     });
   } catch (error) {
     return NextResponse.json(
@@ -88,6 +97,13 @@ export async function GET(request: NextRequest) {
 // POST /api/record
 // Receives formData: { id: "01", audio: Blob }
 export async function POST(request: NextRequest) {
+  if (isDeployed) {
+    return NextResponse.json(
+      { error: "Recording is only available in local dev (npm run dev). The deployed Studio is playback-only." },
+      { status: 403 }
+    );
+  }
+
   try {
     ensureAudioDir();
 
@@ -143,6 +159,13 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/record?id=01
 export async function DELETE(request: NextRequest) {
+  if (isDeployed) {
+    return NextResponse.json(
+      { error: "Deleting is only available in local dev (npm run dev). The deployed Studio is playback-only." },
+      { status: 403 }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");

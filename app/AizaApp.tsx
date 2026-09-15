@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import type { KnowledgeEntry, ProcedureEntry } from "@/lib/knowledgeBase";
 
 type Source = "voice" | "text";
@@ -236,6 +237,17 @@ export function AizaApp() {
             >
               Mentions Légales & Origine
             </button>
+            <span style={{ color: "var(--color-border)" }}>·</span>
+            <Link
+              href="/record"
+              style={{
+                fontSize: "12px",
+                color: "var(--color-ink-soft)",
+                textDecoration: "underline",
+              }}
+            >
+              🎙️ Studio Benchmark
+            </Link>
           </div>
         </main>
       )}
