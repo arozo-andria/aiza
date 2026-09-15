@@ -1,0 +1,20 @@
+node_modules
+.next
+.vercel
+out
+
+.env
+.env.local
+.env*.local
+
+*.log
+npm-debug.log*
+
+.DS_Store
+
+# Benchmark: local Python env + downloaded model weights (multi-GB) never
+# belong in git. results.json/REPORT.md and audio/ recordings do - they're
+# submission deliverables.
+benchmark/venv
+benchmark/models_cache
+.claude

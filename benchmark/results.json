@@ -1,0 +1,320 @@
+{
+  "sahara_available": true,
+  "models": {
+    "sahara": "Intron Sahara (voice.intron.io)",
+    "whisper-small-malagasy": "misterkissi/whisper-small-malagasy",
+    "whisper-small-waxal-mlg": "waxal-benchmarking/whisper-small-waxal-mlg"
+  },
+  "summary": {
+    "sahara": {
+      "n": 10,
+      "avg_wer": 0.8258,
+      "avg_cer": 0.4585,
+      "avg_latency_s": 3.169
+    },
+    "whisper-small-malagasy": {
+      "n": 10,
+      "avg_wer": 0.8819,
+      "avg_cer": 0.4806,
+      "avg_latency_s": 6.476
+    },
+    "whisper-small-waxal-mlg": {
+      "n": 10,
+      "avg_wer": 0.7639,
+      "avg_cer": 0.465,
+      "avg_latency_s": 6.758
+    }
+  },
+  "results": [
+    {
+      "id": "01",
+      "topic": "lost_cin",
+      "reference": "Very ny CIN-ko, aiza no manao déclaration de perte?",
+      "audio_file": "01.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Ferens Yenne même aux déclarations de perte\n",
+          "latency_s": 3.18,
+          "error": null,
+          "wer": 0.8,
+          "cer": 0.42857142857142855
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " verin'ny sehy ianinako, aiza ny manoha dia kilarasyon-deo mperita?  ",
+          "latency_s": 7.42,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.5306122448979592
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "veriny se hianinaako aiza no manao dia kilao rasion deoparita",
+          "latency_s": 6.49,
+          "error": null,
+          "wer": 0.8,
+          "cer": 0.4489795918367347
+        }
+      }
+    },
+    {
+      "id": "02",
+      "topic": "birth_certificate",
+      "reference": "Mila certificat de naissance aho ho an'ny zanako.",
+      "audio_file": "02.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "La certificat de naissance Wançen à coût\n",
+          "latency_s": 3.24,
+          "error": null,
+          "wer": 0.625,
+          "cer": 0.375
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " na sertifika tena ison-sa ho an'ny zanako.  ",
+          "latency_s": 6.32,
+          "error": null,
+          "wer": 0.625,
+          "cer": 0.3333333333333333
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "lasary tia fikadonisao ho anny zanako",
+          "latency_s": 6.1,
+          "error": null,
+          "wer": 0.75,
+          "cer": 0.4791666666666667
+        }
+      }
+    },
+    {
+      "id": "03",
+      "topic": "marriage_certificate",
+      "reference": "Aiza no maka acte de mariage eto Antananarivo?",
+      "audio_file": "03.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Est-ce ma caracte de mariage étant en arrive\n",
+          "latency_s": 3.49,
+          "error": null,
+          "wer": 0.875,
+          "cer": 0.37777777777777777
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " haisakaainy makahakita teo maharihazy eto an-tananarivo?  ",
+          "latency_s": 7.41,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.4222222222222222
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "aisaka kay no maka haka tato mariazy eto antananarivo",
+          "latency_s": 14.44,
+          "error": null,
+          "wer": 0.625,
+          "cer": 0.37777777777777777
+        }
+      }
+    },
+    {
+      "id": "04",
+      "topic": "lost_drivers_license",
+      "reference": "Very ny permis de conduire-ko, inona no atao?",
+      "audio_file": "04.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Permet de conduire Jacques, inamo.\n",
+          "latency_s": 2.94,
+          "error": null,
+          "wer": 0.7777777777777778,
+          "cer": 0.5348837209302325
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " Behery mety ho kanjo irako. Inano atao?  ",
+          "latency_s": 7.33,
+          "error": null,
+          "wer": 0.8888888888888888,
+          "cer": 0.5116279069767442
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "tery mety ho gondohirako inona no atao",
+          "latency_s": 5.8,
+          "error": null,
+          "wer": 0.6666666666666666,
+          "cer": 0.37209302325581395
+        }
+      }
+    },
+    {
+      "id": "05",
+      "topic": "address_change",
+      "reference": "Mila changement d'adresse aho, any amin'ny fokontany ve?",
+      "audio_file": "05.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Le changement d’adresse unième fautin fait\n",
+          "latency_s": 2.96,
+          "error": null,
+          "wer": 0.875,
+          "cer": 0.5
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " لشoanjy monta adiraisa aho anemy fokitany ve  ",
+          "latency_s": 5.94,
+          "error": null,
+          "wer": 0.75,
+          "cer": 0.5
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "lasandromandady iray sanga any aminny fokotany ve",
+          "latency_s": 4.83,
+          "error": null,
+          "wer": 0.75,
+          "cer": 0.4444444444444444
+        }
+      }
+    },
+    {
+      "id": "06",
+      "topic": "passport_cost",
+      "reference": "Ohatrinona ny frais pour ny passeport vaovao?",
+      "audio_file": "06.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Au chien n'en ferait pour pas sport fort?\n",
+          "latency_s": 2.86,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.5
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " ho tsy ny fray pora-pasiparva vao?  ",
+          "latency_s": 5.59,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.4772727272727273
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "ohatrany ny freimpasimbaovao vaovao",
+          "latency_s": 5.42,
+          "error": null,
+          "wer": 0.7142857142857143,
+          "cer": 0.4772727272727273
+        }
+      }
+    },
+    {
+      "id": "07",
+      "topic": "expired_cin",
+      "reference": "Tsy mety ny carte d'identité-ko, tapitra ny validité.",
+      "audio_file": "07.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Si méthan cachent d’identité accout obchant validité.\n",
+          "latency_s": 3.65,
+          "error": null,
+          "wer": 0.8888888888888888,
+          "cer": 0.4117647058823529
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " tsy mety ny karita didon-titehako tapitra ny validy ite.  ",
+          "latency_s": 6.51,
+          "error": null,
+          "wer": 0.5555555555555556,
+          "cer": 0.19607843137254902
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "tsy mety ny karita dido antitehako tapitra ny validite",
+          "latency_s": 6.15,
+          "error": null,
+          "wer": 0.3333333333333333,
+          "cer": 0.17647058823529413
+        }
+      }
+    },
+    {
+      "id": "08",
+      "topic": "land_title",
+      "reference": "Manao ahoana ny procédure ho an'ny titre foncier?",
+      "audio_file": "08.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "La procédure un titre français?\n",
+          "latency_s": 3.14,
+          "error": null,
+          "wer": 0.75,
+          "cer": 0.5416666666666666
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " mprosesy hirao anehititra firan-fonsiegle, ",
+          "latency_s": 6.34,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.75
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "posedure ho anny hita frantsay fotsy iaka e",
+          "latency_s": 6.08,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.7708333333333334
+        }
+      }
+    },
+    {
+      "id": "09",
+      "topic": "criminal_record",
+      "reference": "Mila extrait de casier judiciaire aho, aiza no mankany?",
+      "audio_file": "09.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "Mais il a extrait de gaz judiciaires Wacen Mcane?\n",
+          "latency_s": 3.28,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.4528301886792453
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " milaheksitireto eo gazehajodisy herao aizakaian'ny makane?  ",
+          "latency_s": 5.94,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.6037735849056604
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "milaiky sy reto ka azy avy ity sery aho aiza kay no mankany",
+          "latency_s": 5.75,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.5660377358490566
+        }
+      }
+    },
+    {
+      "id": "10",
+      "topic": "processing_time",
+      "reference": "Firy andro no ilaina hahazoana ny déclaration de perte?",
+      "audio_file": "10.webm",
+      "models": {
+        "sahara": {
+          "hypothesis": "C’est rianoz à une déclaration de perte.\n",
+          "latency_s": 2.95,
+          "error": null,
+          "wer": 0.6666666666666666,
+          "cer": 0.46296296296296297
+        },
+        "whisper-small-malagasy": {
+          "hypothesis": " firiandry noho aza hoana diaekilarasy ao teo perta?  ",
+          "latency_s": 5.96,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.48148148148148145
+        },
+        "whisper-small-waxal-mlg": {
+          "hypothesis": "fy rihandro no azo ahoana dia kilao soa teo mpiata",
+          "latency_s": 6.52,
+          "error": null,
+          "wer": 1.0,
+          "cer": 0.5370370370370371
+        }
+      }
+    }
+  ]
+}

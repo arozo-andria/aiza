@@ -1,0 +1,52 @@
+[
+  {
+    "id": "01",
+    "text": "Very ny CIN-ko, aiza no manao déclaration de perte?",
+    "topic": "lost_cin"
+  },
+  {
+    "id": "02",
+    "text": "Mila certificat de naissance aho ho an'ny zanako.",
+    "topic": "birth_certificate"
+  },
+  {
+    "id": "03",
+    "text": "Aiza no maka acte de mariage eto Antananarivo?",
+    "topic": "marriage_certificate"
+  },
+  {
+    "id": "04",
+    "text": "Very ny permis de conduire-ko, inona no atao?",
+    "topic": "lost_drivers_license"
+  },
+  {
+    "id": "05",
+    "text": "Mila changement d'adresse aho, any amin'ny fokontany ve?",
+    "topic": "address_change"
+  },
+  {
+    "id": "06",
+    "text": "Ohatrinona ny frais pour ny passeport vaovao?",
+    "topic": "passport_cost"
+  },
+  {
+    "id": "07",
+    "text": "Tsy mety ny carte d'identité-ko, tapitra ny validité.",
+    "topic": "expired_cin"
+  },
+  {
+    "id": "08",
+    "text": "Manao ahoana ny procédure ho an'ny titre foncier?",
+    "topic": "land_title"
+  },
+  {
+    "id": "09",
+    "text": "Mila extrait de casier judiciaire aho, aiza no mankany?",
+    "topic": "criminal_record"
+  },
+  {
+    "id": "10",
+    "text": "Firy andro no ilaina hahazoana ny déclaration de perte?",
+    "topic": "processing_time"
+  }
+]
