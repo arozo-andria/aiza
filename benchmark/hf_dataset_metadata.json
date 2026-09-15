@@ -1,0 +1,82 @@
+[
+  {
+    "file_name": "audio/01.webm",
+    "id": "01",
+    "topic": "lost_cin",
+    "reference_text": "Very ny CIN-ko, aiza no manao déclaration de perte?",
+    "duration_seconds": 6.14,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/02.webm",
+    "id": "02",
+    "topic": "birth_certificate",
+    "reference_text": "Mila certificat de naissance aho ho an'ny zanako.",
+    "duration_seconds": 4.46,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/03.webm",
+    "id": "03",
+    "topic": "marriage_certificate",
+    "reference_text": "Aiza no maka acte de mariage eto Antananarivo?",
+    "duration_seconds": 5.01,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/04.webm",
+    "id": "04",
+    "topic": "lost_drivers_license",
+    "reference_text": "Very ny permis de conduire-ko, inona no atao?",
+    "duration_seconds": 2.86,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/05.webm",
+    "id": "05",
+    "topic": "address_change",
+    "reference_text": "Mila changement d'adresse aho, any amin'ny fokontany ve?",
+    "duration_seconds": 4.36,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/06.webm",
+    "id": "06",
+    "topic": "passport_cost",
+    "reference_text": "Ohatrinona ny frais pour ny passeport vaovao?",
+    "duration_seconds": 3.78,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/07.webm",
+    "id": "07",
+    "topic": "expired_cin",
+    "reference_text": "Tsy mety ny carte d'identité-ko, tapitra ny validité.",
+    "duration_seconds": 5.68,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/08.webm",
+    "id": "08",
+    "topic": "land_title",
+    "reference_text": "Manao ahoana ny procédure ho an'ny titre foncier?",
+    "duration_seconds": 3.56,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/09.webm",
+    "id": "09",
+    "topic": "criminal_record",
+    "reference_text": "Mila extrait de casier judiciaire aho, aiza no mankany?",
+    "duration_seconds": 4.85,
+    "languages": "mg,fr"
+  },
+  {
+    "file_name": "audio/10.webm",
+    "id": "10",
+    "topic": "processing_time",
+    "reference_text": "Firy andro no ilaina hahazoana ny déclaration de perte?",
+    "duration_seconds": 3.7,
+    "languages": "mg,fr"
+  }
+]

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import type { KnowledgeEntry, ProcedureEntry } from "@/lib/knowledgeBase";
 
 type Source = "voice" | "text";
@@ -44,6 +43,7 @@ export function AizaApp() {
   const [state, setState] = useState<AppState>({ screen: "home" });
   const [textValue, setTextValue] = useState("");
   const [showLegalModal, setShowLegalModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -197,47 +197,31 @@ export function AizaApp() {
             </button>
           </form>
 
-          {/* Quick suggestions pills */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "center", marginTop: "4px" }}>
-            {EXAMPLE_PROMPTS.map((item) => (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => proceedToUnderstanding(item.prompt, "text")}
-                style={{
-                  background: "var(--color-surface)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-full)",
-                  padding: "4px 10px",
-                  fontSize: "12px",
-                  color: "var(--color-ink-soft)",
-                  cursor: "pointer",
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ marginTop: "16px", display: "flex", gap: "12px", alignItems: "center" }}>
-            <Link
-              href="/record"
+          {/* About / How-to lightbulb button */}
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "8px" }}>
+            <button
+              type="button"
+              onClick={() => setShowHelpModal(true)}
+              aria-label="About AIZA — how to use"
               style={{
-                fontSize: "12px",
-                color: "var(--color-ink-soft)",
-                textDecoration: "none",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "4px",
-                padding: "4px 10px",
-                borderRadius: "var(--radius-full)",
+                gap: "6px",
                 background: "var(--color-surface)",
                 border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-full)",
+                padding: "7px 16px",
+                fontSize: "13px",
+                color: "var(--color-ink-soft)",
+                cursor: "pointer",
+                fontWeight: 600,
               }}
             >
-              🎙️ Studio Benchmark
-            </Link>
+              <InfoIcon /> How to use · Comment utiliser · Ahoana ny fampiasa azy
+            </button>
+          </div>
 
+          <div style={{ marginTop: "16px", display: "flex", gap: "12px", alignItems: "center", justifyContent: "center" }}>
             <button
               type="button"
               onClick={() => setShowLegalModal(true)}
@@ -445,14 +429,160 @@ export function AizaApp() {
             >
               Mazava / Compris
             </button>
-          </div>
+            </div>
         </div>
+      )}
+
+      {/* Help / About Modal */}
+      {showHelpModal && (
+        <HelpModal onClose={() => setShowHelpModal(false)} />
       )}
     </div>
   );
 }
 
+function HelpModal({ onClose }: { onClose: () => void }) {
+  const [lang, setLang] = useState<"en" | "fr" | "mg">("en");
+
+  const content = {
+    en: {
+      title: "What is AIZA?",
+      about: "AIZA is a voice-first assistant for Malagasy administrative procedures. Ask your question the way you naturally speak — mixing Malagasy and French is perfectly fine. AIZA finds the official, verified procedure: required documents, steps, office to go to, cost, and processing time. If it doesn't have a verified answer, it says so clearly — it never guesses or invents a procedure.",
+      howTitle: "How to use",
+      steps: [
+        { icon: "mic", text: "Tap the big orange button and speak your question (Malagasy, French, or both)." },
+        { icon: "keyboard", text: "Or type your question in the text field and tap Handefa." },
+        { icon: "document", text: "AIZA shows the verified procedure — or tells you honestly when it doesn't know." },
+        { icon: "example", text: 'Example: "Very ny CIN-ko, aiza no manao déclaration de perte?"' },
+      ],
+      close: "Got it",
+    },
+    fr: {
+      title: "Qu'est-ce qu'AIZA ?",
+      about: "AIZA est un assistant vocal pour les démarches administratives malgaches. Posez votre question comme vous parlez naturellement — mélanger le malgache et le français est totalement accepté. AIZA retrouve la procédure officielle vérifiée : documents requis, étapes, lieu, coût et délai. Si elle n'a pas de réponse vérifiée, elle le dit clairement — elle ne devine jamais et n'invente aucune procédure.",
+      howTitle: "Comment l'utiliser",
+      steps: [
+        { icon: "mic", text: "Appuyez sur le grand bouton orange et parlez (malgache, français, ou les deux)." },
+        { icon: "keyboard", text: "Ou tapez votre question dans le champ texte et appuyez sur Handefa." },
+        { icon: "document", text: "AIZA affiche la procédure vérifiée — ou indique honnêtement qu'elle ne sait pas." },
+        { icon: "example", text: 'Exemple : "Very ny CIN-ko, aiza no manao déclaration de perte ?"' },
+      ],
+      close: "Compris",
+    },
+    mg: {
+      title: "Inona ny AIZA?",
+      about: "AIZA dia mpanolo-tsaina amin'ny feo ho an'ny dingana ara-panjakana malagasy. Manontania araka ny fomba fiteniny ianao — mampifangaro malagasy sy frantsay dia tsy misy olana. AIZA mitady ny dingana ofisialy voamarina : antontan-taratasy, dingana, toerana, vidiny ary faharetan'ny fotoana. Raha tsy manana valiny voamarina izy, milaza mazava izany — tsy manao vinavina na mamorona dingana misy hadiso izy.",
+      howTitle: "Ahoana ny fampiasana azy",
+      steps: [
+        { icon: "mic", text: "Tsindrio ny bokotra volorange lehibe ary miteny ny fanontanianao (malagasy, frantsay, na izy roa)." },
+        { icon: "keyboard", text: "Na soratr'azy ny fanontanianao amin'ny efijery lahatsoratra ary tsindrio Handefa." },
+        { icon: "document", text: "AIZA mampiseho ny dingana voamarina — na milaza mazava raha tsy fantany." },
+        { icon: "example", text: 'Ohatra: "Very ny CIN-ko, aiza no manao déclaration de perte?"' },
+      ],
+      close: "Mazava",
+    },
+  };
+
+  const c = content[lang];
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.55)",
+        backdropFilter: "blur(4px)",
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "var(--color-surface)",
+          borderRadius: "var(--radius-lg)",
+          maxWidth: "500px",
+          width: "100%",
+          maxHeight: "88vh",
+          overflowY: "auto",
+          padding: "24px 22px",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+          textAlign: "left",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+          <h2 style={{ fontSize: "20px", fontWeight: 800, margin: 0, color: "var(--color-primary)", display: "flex", alignItems: "center", gap: "8px" }}>
+            <InfoIcon /> {c.title}
+          </h2>
+          <button
+            onClick={onClose}
+            style={{ background: "transparent", border: "none", fontSize: "20px", cursor: "pointer", color: "var(--color-ink-soft)" }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Language switcher */}
+        <div style={{ display: "flex", gap: "8px", marginBottom: "18px" }}>
+          {(["en", "fr", "mg"] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => setLang(l)}
+              style={{
+                padding: "4px 14px",
+                borderRadius: "var(--radius-full)",
+                border: "1px solid var(--color-border)",
+                background: lang === l ? "var(--color-primary)" : "var(--color-surface)",
+                color: lang === l ? "#fff" : "var(--color-ink-soft)",
+                fontWeight: lang === l ? 700 : 400,
+                fontSize: "13px",
+                cursor: "pointer",
+              }}
+            >
+              {l === "en" ? "🇬🇧 EN" : l === "fr" ? "🇫🇷 FR" : "🇲🇬 MG"}
+            </button>
+          ))}
+        </div>
+
+        {/* About text */}
+        <p style={{ fontSize: "13px", lineHeight: 1.65, color: "var(--color-ink)", margin: "0 0 18px" }}>
+          {c.about}
+        </p>
+
+        {/* How to use */}
+        <h3 style={{ fontSize: "14px", fontWeight: 700, margin: "0 0 10px", color: "var(--color-ink)", borderTop: "1px solid var(--color-border)", paddingTop: "14px" }}>
+          {c.howTitle}
+        </h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "22px" }}>
+          {c.steps.map((step, i) => (
+            <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", fontSize: "13px", color: "var(--color-ink)", lineHeight: 1.5 }}>
+              <span style={{ flexShrink: 0, color: "var(--color-primary)", marginTop: "1px" }}>
+                <StepIcon name={step.icon} />
+              </span>
+              <span>{step.text}</span>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={onClose}
+          className="primary-button"
+          style={{ padding: "12px", fontSize: "14px", width: "100%" }}
+        >
+          {c.close}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Brand() {
+
   return (
     <header className="brand">
       <div className="brand__mark">A</div>
@@ -590,4 +720,87 @@ function StopIcon() {
       <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" />
     </svg>
   );
+}
+
+function InfoIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 11v5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="7.75" r="1.15" fill="currentColor" />
+    </svg>
+  );
+}
+
+function KeyboardIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path
+        d="M7 10h.01M11 10h.01M15 10h.01M17 10h.01M7 14h10"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function DocumentIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M7 3.5h7l4 4V19a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 19V5A1.5 1.5 0 0 1 7 3.5Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M9.5 12h5M9.5 15.5h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ExampleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M4 5.5h16M4 10.5h16M4 15.5h10"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <circle cx="19" cy="16" r="3" stroke="currentColor" strokeWidth="1.6" />
+      <path d="m21.1 18.1 1.4 1.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SmallMicIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" fill="currentColor" />
+      <path
+        d="M19 11a7 7 0 0 1-14 0M12 18v3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function StepIcon({ name }: { name: string }) {
+  switch (name) {
+    case "mic":
+      return <SmallMicIcon />;
+    case "keyboard":
+      return <KeyboardIcon />;
+    case "document":
+      return <DocumentIcon />;
+    case "example":
+      return <ExampleIcon />;
+    default:
+      return null;
+  }
 }

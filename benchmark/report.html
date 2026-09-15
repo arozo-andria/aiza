@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AIZA - Code-Switching Benchmark Report</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 15mm 20mm 15mm;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1a202c;
+    line-height: 1.5;
+    font-size: 13px;
+    padding: 10px;
+  }
+  h1 {
+    color: #0f172a;
+    font-size: 22px;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 8px;
+    margin-top: 0;
+  }
+  h2 {
+    color: #1e293b;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 4px;
+  }
+  h3 {
+    color: #334155;
+    font-size: 14px;
+    margin-top: 14px;
+    margin-bottom: 4px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 12px;
+  }
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #0f172a;
+  }
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  code {
+    background-color: #f1f5f9;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11px;
+  }
+  p, li {
+    margin-bottom: 6px;
+  }
+  ul {
+    margin-top: 4px;
+    padding-left: 20px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<h1>AIZA Code-Switching Benchmark Report</h1>
+<p>Comparing Sahara against two Malagasy-specific fine-tunes on real, self-recorded Malagasy/French code-switched administrative queries (AIZA's actual target domain - see the dataset coverage note below for why this benchmark uses its own audio rather than the official AfriSwitch benchmark).</p>
+<h2>Models</h2>
+<ul>
+<li><strong>sahara</strong>: <code>Intron Sahara (voice.intron.io)</code></li>
+<li><strong>whisper-small-malagasy</strong>: <code>misterkissi/whisper-small-malagasy</code></li>
+<li><strong>whisper-small-waxal-mlg</strong>: <code>waxal-benchmarking/whisper-small-waxal-mlg</code></li>
+</ul>
+<h2>Summary (lower WER/CER is better)</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>N</th>
+<th>Avg WER</th>
+<th>Avg CER</th>
+<th>Avg latency (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sahara</td>
+<td>10</td>
+<td>82.6%</td>
+<td>45.9%</td>
+<td>3.2</td>
+</tr>
+<tr>
+<td>whisper-small-malagasy</td>
+<td>10</td>
+<td>88.2%</td>
+<td>48.1%</td>
+<td>6.5</td>
+</tr>
+<tr>
+<td>whisper-small-waxal-mlg</td>
+<td>10</td>
+<td>76.4%</td>
+<td>46.5%</td>
+<td>6.8</td>
+</tr>
+</tbody>
+</table>
+<h2>Per-utterance results</h2>
+<h3>01 — lost_cin</h3>
+<p><strong>Reference:</strong> Very ny CIN-ko, aiza no manao déclaration de perte?</p>
+<ul>
+<li><strong>sahara</strong>: 'Ferens Yenne même aux déclarations de perte\n' <em>(WER 80.0%, CER 42.9%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: " verin'ny sehy ianinako, aiza ny manoha dia kilarasyon-deo mperita?  " <em>(WER 100.0%, CER 53.1%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'veriny se hianinaako aiza no manao dia kilao rasion deoparita' <em>(WER 80.0%, CER 44.9%)</em></li>
+</ul>
+<h3>02 — birth_certificate</h3>
+<p><strong>Reference:</strong> Mila certificat de naissance aho ho an'ny zanako.</p>
+<ul>
+<li><strong>sahara</strong>: 'La certificat de naissance Wançen à coût\n' <em>(WER 62.5%, CER 37.5%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: " na sertifika tena ison-sa ho an'ny zanako.  " <em>(WER 62.5%, CER 33.3%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'lasary tia fikadonisao ho anny zanako' <em>(WER 75.0%, CER 47.9%)</em></li>
+</ul>
+<h3>03 — marriage_certificate</h3>
+<p><strong>Reference:</strong> Aiza no maka acte de mariage eto Antananarivo?</p>
+<ul>
+<li><strong>sahara</strong>: 'Est-ce ma caracte de mariage étant en arrive\n' <em>(WER 87.5%, CER 37.8%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' haisakaainy makahakita teo maharihazy eto an-tananarivo?  ' <em>(WER 100.0%, CER 42.2%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'aisaka kay no maka haka tato mariazy eto antananarivo' <em>(WER 62.5%, CER 37.8%)</em></li>
+</ul>
+<h3>04 — lost_drivers_license</h3>
+<p><strong>Reference:</strong> Very ny permis de conduire-ko, inona no atao?</p>
+<ul>
+<li><strong>sahara</strong>: 'Permet de conduire Jacques, inamo.\n' <em>(WER 77.8%, CER 53.5%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' Behery mety ho kanjo irako. Inano atao?  ' <em>(WER 88.9%, CER 51.2%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'tery mety ho gondohirako inona no atao' <em>(WER 66.7%, CER 37.2%)</em></li>
+</ul>
+<h3>05 — address_change</h3>
+<p><strong>Reference:</strong> Mila changement d'adresse aho, any amin'ny fokontany ve?</p>
+<ul>
+<li><strong>sahara</strong>: 'Le changement d’adresse unième fautin fait\n' <em>(WER 87.5%, CER 50.0%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' لشoanjy monta adiraisa aho anemy fokitany ve  ' <em>(WER 75.0%, CER 50.0%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'lasandromandady iray sanga any aminny fokotany ve' <em>(WER 75.0%, CER 44.4%)</em></li>
+</ul>
+<h3>06 — passport_cost</h3>
+<p><strong>Reference:</strong> Ohatrinona ny frais pour ny passeport vaovao?</p>
+<ul>
+<li><strong>sahara</strong>: "Au chien n'en ferait pour pas sport fort?\n" <em>(WER 100.0%, CER 50.0%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' ho tsy ny fray pora-pasiparva vao?  ' <em>(WER 100.0%, CER 47.7%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'ohatrany ny freimpasimbaovao vaovao' <em>(WER 71.4%, CER 47.7%)</em></li>
+</ul>
+<h3>07 — expired_cin</h3>
+<p><strong>Reference:</strong> Tsy mety ny carte d'identité-ko, tapitra ny validité.</p>
+<ul>
+<li><strong>sahara</strong>: 'Si méthan cachent d’identité accout obchant validité.\n' <em>(WER 88.9%, CER 41.2%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' tsy mety ny karita didon-titehako tapitra ny validy ite.  ' <em>(WER 55.6%, CER 19.6%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'tsy mety ny karita dido antitehako tapitra ny validite' <em>(WER 33.3%, CER 17.6%)</em></li>
+</ul>
+<h3>08 — land_title</h3>
+<p><strong>Reference:</strong> Manao ahoana ny procédure ho an'ny titre foncier?</p>
+<ul>
+<li><strong>sahara</strong>: 'La procédure un titre français?\n' <em>(WER 75.0%, CER 54.2%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' mprosesy hirao anehititra firan-fonsiegle, ' <em>(WER 100.0%, CER 75.0%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'posedure ho anny hita frantsay fotsy iaka e' <em>(WER 100.0%, CER 77.1%)</em></li>
+</ul>
+<h3>09 — criminal_record</h3>
+<p><strong>Reference:</strong> Mila extrait de casier judiciaire aho, aiza no mankany?</p>
+<ul>
+<li><strong>sahara</strong>: 'Mais il a extrait de gaz judiciaires Wacen Mcane?\n' <em>(WER 100.0%, CER 45.3%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: " milaheksitireto eo gazehajodisy herao aizakaian'ny makane?  " <em>(WER 100.0%, CER 60.4%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'milaiky sy reto ka azy avy ity sery aho aiza kay no mankany' <em>(WER 100.0%, CER 56.6%)</em></li>
+</ul>
+<h3>10 — processing_time</h3>
+<p><strong>Reference:</strong> Firy andro no ilaina hahazoana ny déclaration de perte?</p>
+<ul>
+<li><strong>sahara</strong>: 'C’est rianoz à une déclaration de perte.\n' <em>(WER 66.7%, CER 46.3%)</em></li>
+<li><strong>whisper-small-malagasy</strong>: ' firiandry noho aza hoana diaekilarasy ao teo perta?  ' <em>(WER 100.0%, CER 48.1%)</em></li>
+<li><strong>whisper-small-waxal-mlg</strong>: 'fy rihandro no azo ahoana dia kilao soa teo mpiata' <em>(WER 100.0%, CER 53.7%)</em></li>
+</ul>
+<h2>Dataset coverage note</h2>
+<p>Sahara's published language list (confirmed via docs.voice.intron.io and the challenge's own WhatsApp announcement) does not include Malagasy. The official <code>intronhealth/AfriSwitch</code> benchmark - 14 African languages code-switched with English - also does not include Malagasy, and the dataset itself is manually gated with no public preview, so we could not rely on approval landing before the deadline. No public code-switched Malagasy/French benchmark dataset appears to exist yet. That gap is itself a finding, not just a limitation: it's why AIZA always shows the raw transcript rather than silently 'correcting' it, and always offers a typed fallback instead of guessing when confidence is low.</p>
+</body>
+</html>

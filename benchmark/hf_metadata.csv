@@ -1,0 +1,11 @@
+file_name,id,topic,reference_text,duration_seconds,languages
+audio/01.webm,01,lost_cin,"Very ny CIN-ko, aiza no manao déclaration de perte?",6.14,"mg,fr"
+audio/02.webm,02,birth_certificate,Mila certificat de naissance aho ho an'ny zanako.,4.46,"mg,fr"
+audio/03.webm,03,marriage_certificate,Aiza no maka acte de mariage eto Antananarivo?,5.01,"mg,fr"
+audio/04.webm,04,lost_drivers_license,"Very ny permis de conduire-ko, inona no atao?",2.86,"mg,fr"
+audio/05.webm,05,address_change,"Mila changement d'adresse aho, any amin'ny fokontany ve?",4.36,"mg,fr"
+audio/06.webm,06,passport_cost,Ohatrinona ny frais pour ny passeport vaovao?,3.78,"mg,fr"
+audio/07.webm,07,expired_cin,"Tsy mety ny carte d'identité-ko, tapitra ny validité.",5.68,"mg,fr"
+audio/08.webm,08,land_title,Manao ahoana ny procédure ho an'ny titre foncier?,3.56,"mg,fr"
+audio/09.webm,09,criminal_record,"Mila extrait de casier judiciaire aho, aiza no mankany?",4.85,"mg,fr"
+audio/10.webm,10,processing_time,Firy andro no ilaina hahazoana ny déclaration de perte?,3.7,"mg,fr"

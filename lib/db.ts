@@ -22,16 +22,23 @@ const DB_PATH = path.join(process.cwd(), "data", "aiza.db");
 
 let db: DatabaseSync | null = null;
 
+// Vercel sets this in every serverless invocation - used to tell a real
+// deployment (read-only filesystem outside /tmp) apart from local dev
+// (writable, and where we want code changes to SEED_ENTRIES to actually
+// take effect on the next request instead of silently going stale).
+const isDeployed = !!process.env.VERCEL;
+
 function getDb(): DatabaseSync {
   if (db) return db;
 
-  // If the file already exists (committed/pre-seeded, e.g. shipped in the
-  // Vercel deployment bundle), open read-only and never attempt a write -
-  // serverless functions get a read-only filesystem outside /tmp. Only a
-  // first local run (no file yet) opens read-write to bootstrap + seed it.
   const alreadyExists = fs.existsSync(DB_PATH);
 
-  if (alreadyExists) {
+  // In production the file ships pre-seeded with the deployment bundle:
+  // open read-only and never attempt a write - serverless functions get a
+  // read-only filesystem outside /tmp. Locally, always open read-write and
+  // re-sync from SEED_ENTRIES below, so editing knowledgeBase.ts and
+  // restarting `next dev` is enough to see the change - no manual DB reset.
+  if (alreadyExists && isDeployed) {
     db = new DatabaseSync(DB_PATH, { readOnly: true });
     return db;
   }
@@ -66,16 +73,14 @@ function getDb(): DatabaseSync {
     CREATE INDEX IF NOT EXISTS idx_history_entry ON history(entry_id);
   `);
 
-  seedIfEmpty(db);
+  syncSeed(db);
   return db;
 }
 
-function seedIfEmpty(db: DatabaseSync) {
-  const { count } = db
-    .prepare("SELECT COUNT(*) AS count FROM knowledge_entries")
-    .get() as { count: number };
-  if (count > 0) return;
-
+// Upserts every SEED_ENTRIES row (insertEntry already does INSERT ... ON
+// CONFLICT DO UPDATE) so the code in knowledgeBase.ts is always the source
+// of truth locally - safe to call on every dev-server start, not just once.
+function syncSeed(db: DatabaseSync) {
   for (const entry of SEED_ENTRIES) {
     insertEntry(entry, db);
   }
@@ -123,6 +128,11 @@ export function insertEntry(entry: KnowledgeEntry, dbOverride?: DatabaseSync) {
   conn.prepare("DELETE FROM keywords WHERE entry_id = ?").run(entry.id);
   for (const keyword of entry.keywords) insertKeyword.run(entry.id, keyword);
 
+  // Replace, not append: insertEntry represents "this entry's history as
+  // the code defines it right now," so it must be idempotent across
+  // repeated syncSeed() calls. Real incremental history additions (outside
+  // of a seed) go through addHistoryNote below instead, which only appends.
+  conn.prepare("DELETE FROM history WHERE entry_id = ?").run(entry.id);
   const insertHistory = conn.prepare(
     "INSERT INTO history (entry_id, date, note) VALUES (?, ?, ?)"
   );

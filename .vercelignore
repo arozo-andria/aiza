@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+
+# Benchmark: Python env, downloaded model weights (multi-GB), and raw
+# recordings - none of this belongs in the deployed app bundle.
+benchmark/venv
+benchmark/models_cache
+benchmark/audio
+
+*.log
+.DS_Store
